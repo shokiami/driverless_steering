@@ -23,8 +23,9 @@ axs[1].set_xlim(right=50.0)
 
 vels = []
 accels = []
+labels = []
 
-for csv in os.listdir(CSV_DIR):
+for csv in sorted(os.listdir(CSV_DIR)):
   df = pd.read_csv(os.path.join(CSV_DIR, csv))
   time = ((df['TimeLow [us/10]'] - df['TimeLow [us/10]'][0]) / 1e7).to_numpy()
   name = csv.replace('.csv', '')
@@ -33,19 +34,17 @@ for csv in os.listdir(CSV_DIR):
   time, vel = differentiate(time, pos)
   time, accel = differentiate(time, vel)
 
-  # angular vel dist
-  axs[0].hist(np.abs(vel), bins=100, alpha=0.5, label=name)
-
-  # angular accel dist
-  axs[1].hist(np.abs(accel), bins=100, alpha=0.5, label=name)
-
   vels.append(vel)
   accels.append(accel)
+  labels.append(name)
+
+axs[0].hist([np.abs(v) for v in vels], bins=100, stacked=True, edgecolor='none', label=labels)
+axs[1].hist([np.abs(a) for a in accels], bins=100, stacked=True, edgecolor='none', label=labels)
 
 vel_percentile = np.percentile(np.concatenate(vels), PERCENTILE)
 accel_percentile = np.percentile(np.concatenate(accels), PERCENTILE)
-axs[0].axvline(x=vel_percentile, linestyle='--', alpha=0.8, label=f'99th Percentile: {round(vel_percentile, 4)}')
-axs[1].axvline(x=accel_percentile, linestyle='--', alpha=0.8, label=f'99th Percentile: {round(accel_percentile, 4)}')
+axs[0].axvline(x=vel_percentile, linestyle='--', label=f'99th Percentile: {round(vel_percentile, 4)} rad/s')
+axs[1].axvline(x=accel_percentile, linestyle='--', label=f'99th Percentile: {round(accel_percentile, 4)} rad/s^2')
 
 axs[0].legend(fontsize='8')
 axs[1].legend(fontsize='8')
