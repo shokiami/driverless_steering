@@ -21,10 +21,9 @@ axs1[1].set_title(f'Steering Angular Velocity vs. Time')
 axs1[1].set_xlabel('Time (s)')
 axs1[1].set_ylabel('Angular Velocity (rad/s)')
 
-fig2, axs2 = plt.subplots(figsize=(10, 8))
+fig2, axs2 = plt.subplots(figsize=(10, 5))
 axs2.set_title(f'Angular Velocity Distribution')
 axs2.set_xlabel('Angular Velocity (rad/s)')
-axs2.set_xlim(right=0.9)
 
 vels = []
 labels = []
@@ -52,14 +51,15 @@ for csv in sorted(os.listdir(CSV_DIR)):
     vels.append(vel)
     labels.append(name)
 
-axs2.hist([np.abs(vel) for vel in vels], bins=100, stacked=True, edgecolor='none', label=labels)
+axs2.hist([np.abs(vel) for vel in vels], bins=50, stacked=True, edgecolor='none', label=labels)
 
 vel_percentile = np.percentile(np.concatenate(vels), PERCENTILE)
 axs2.axvline(x=vel_percentile, linestyle='--', label=f'99th Percentile: {round(vel_percentile, 4)} rad/s')
 
 axs1[0].legend(loc='upper right', fontsize='9')
 axs1[1].legend(loc='upper right', fontsize='9')
-axs2.legend(loc='upper right', fontsize='11')
+axs2.legend(loc='upper right', fontsize='8')
+axs2.set_xlim(left=0.0)
 
 fig1.tight_layout()
 fig1.savefig('steering_pot.png')
