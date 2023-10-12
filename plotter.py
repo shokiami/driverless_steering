@@ -25,9 +25,9 @@ axs1[2].set_xlabel('Time (s)')
 axs1[2].set_ylabel('Angular Acceleration (rad/s^2)')
 
 fig2, axs2 = plt.subplots(nrows=2, figsize=(20, 10))
-axs2[0].set_title(f'Angular Velocity Distribution')
+axs2[0].set_title(f'Steering Angular Velocity Distribution')
 axs2[0].set_xlabel('Angular Velocity (rad/s)')
-axs2[1].set_title(f'Angular Acceleration Distribution')
+axs2[1].set_title(f'Steering Angular Acceleration Distribution')
 axs2[1].set_xlabel('Angular Acceleration (rad/s^2)')
 
 vels = []
