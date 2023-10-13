@@ -65,8 +65,13 @@ for csv in sorted(os.listdir(CSV_DIR)):
 axs2[0].hist([np.abs(vel) for vel in vels], bins=50, stacked=True, edgecolor='none', label=labels)
 axs2[1].hist([np.abs(accel) for accel in accels], bins=50, stacked=True, edgecolor='none', label=labels)
 
-vel_99 = np.percentile(np.concatenate(vels), PERCENTILE)
-accel_99 = np.percentile(np.concatenate(accels), PERCENTILE)
+vels = np.abs(np.concatenate(vels))
+accels = np.abs(np.concatenate(accels))
+vel_99 = np.percentile(vels, PERCENTILE)
+accel_99 = np.percentile(accels, PERCENTILE)
+vel_max = np.max(vels)
+accel_max = np.max(accels)
+
 axs2[0].axvline(x=vel_99, linestyle='--', label=f'99th Percentile: {round(vel_99, 4)} rad/s')
 axs2[1].axvline(x=accel_99, linestyle='--', label=f'99th Percentile: {round(accel_99, 4)} rad/s^2')
 
@@ -75,10 +80,13 @@ axs1[1].legend(loc='upper right', fontsize='9')
 axs1[2].legend(loc='upper right', fontsize='9')
 axs2[0].legend(loc='upper right', fontsize='9')
 axs2[1].legend(loc='upper right', fontsize='9')
-axs2[0].set_xlim(left=0.0)
-axs2[1].set_xlim(left=0.0)
+axs2[0].set_xlim(left=0.0, right=vel_max)
+axs2[1].set_xlim(left=0.0, right=accel_max)
 
 fig1.tight_layout()
 fig1.savefig('steering_pot.png')
 fig2.tight_layout()
 fig2.savefig('steering_dist.png')
+
+print(f"Max Steering Angular Velocity (rad/s): {vel_max}")
+print(f"Max Steering Angular Acceleration (rad/s^2): {accel_max}")
